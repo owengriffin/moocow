@@ -59,8 +59,8 @@ module RTM
 
       if (@auto_timeline && !NO_TIMELINE[method])
         response = @http.get(url_for('rtm.timelines.create',{'auth_token' => @token}));
-        if response['timeline']
-          @last_timeline = response['timeline']
+        if response['rsp']['timeline']
+          @last_timeline = response['rsp']['timeline']
           params[:timeline] = @last_timeline
         else
           raise BadResponseException, "Expected a <timeline></timeline> type response, but got: #{response.body}"
@@ -72,7 +72,9 @@ module RTM
         params_no_symbols[k.to_s] = v
       end
 
-      response = @http.get(url_for(method,params_no_symbols))
+      url = url_for(method,params_no_symbols)
+      puts url
+      response = @http.get(url)
       verify(response)
       return response['rsp']
     end
